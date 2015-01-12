@@ -17,8 +17,8 @@ namespace FieldDataAnalyzer
 
 		public List<string> ParseGeneralData(string filename)
 		{
-			List<string> result = new List<string>();
-			StreamReader sr = new StreamReader(filename);
+			var result = new List<string>();
+			var sr = new StreamReader(filename);
 			string buf;
 			while (!sr.EndOfStream)
 			{
@@ -31,8 +31,8 @@ namespace FieldDataAnalyzer
 
 		public List<string[]> ParseSchema(string filename)
 		{
-			List<string[]> result = new List<string[]>();
-			StreamReader sr = new StreamReader(filename);
+			var result = new List<string[]>();
+			var sr = new StreamReader(filename);
 			string[] buf;
 			while (!sr.EndOfStream)
 			{
@@ -45,8 +45,8 @@ namespace FieldDataAnalyzer
 
 		public List<PipeData> ParsePipes(string filename)
 		{
-			List<PipeData> result = new List<PipeData>();
-			StreamReader sr = new StreamReader(filename);
+			var result = new List<PipeData>();
+			var sr = new StreamReader(filename);
 			string[] buf;
 			while (!sr.EndOfStream)
 			{
@@ -68,6 +68,62 @@ namespace FieldDataAnalyzer
 			return result;
 		}
 
+		public List<string[]> ParseWells(string filename)
+		{
+			var result = new List<string[]>();
+			var sr = new StreamReader(filename);
+			string[] buf;
+			while (!sr.EndOfStream)
+			{
+				buf = sr.ReadLine().Split(new char[] { ' ', '\t' });
+				if (buf.Count() != 0)
+					result.Add(new string[] { buf[0], buf[1] });
+			}
+			return result;
+		}
+
+		public List<SkvData> ParseSkv(string filename)
+		{
+			var result = new List<SkvData>();
+			var sr = new StreamReader(filename);
+			string[] buf;
+			while (!sr.EndOfStream)
+			{
+				buf = sr.ReadLine().Split(new char[] { ' ', '\t' });
+				if (buf.Count() != 0)
+					result.Add(new SkvData
+					{
+						Name = buf[0],
+						Date = Convert.ToDateTime(buf[1]),
+						G_gas = Convert.ToDouble(buf[2]),
+						G_condensat = Convert.ToDouble(buf[3]),
+						P_ust = Convert.ToDouble(buf[4]),
+						T_ust = Convert.ToDouble(buf[5]),
+						P_shl = Convert.ToDouble(buf[6]),
+						T_sl = Convert.ToDouble(buf[7])
+					});
+			}
+			return result;
+		}
+
+		public List<SborData> ParseSbor(string filename)
+		{
+			var result = new List<SborData>();
+			var sr = new StreamReader(filename);
+			string[] buf;
+			while (!sr.EndOfStream)
+			{
+				buf = sr.ReadLine().Split(new char[] { ' ', '\t' });
+				if (buf.Count() != 0)
+					result.Add(new SborData
+					{
+						Date = Convert.ToDateTime(buf[0]),
+						P = Convert.ToDouble(buf[1]),
+						T = Convert.ToDouble(buf[2])
+					});
+			}
+			return result;
+		}
 	}
 
 	class PipeData
@@ -81,5 +137,24 @@ namespace FieldDataAnalyzer
 		public string StartNode;
 		public string EndNode;
 		public double OuterT;
+	}
+
+	class SkvData
+	{
+		public string Name;
+		public DateTime Date;
+		public double G_gas;
+		public double G_condensat;
+		public double P_ust;
+		public double T_ust;
+		public double P_shl;
+		public double T_sl;
+	}
+
+	class SborData
+	{
+		public DateTime Date;
+		public double P;
+		public double T;
 	}
 }
